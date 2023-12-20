@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/constants/app_text.dart';
+import 'package:flutter_game/feature/view/settings.dart';
 import 'package:flutter_game/product/widgets/buttons/home_buttons.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,62 +19,57 @@ class HomeView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              StringConstants.appTitle,
+              TextConstants.appTitle,
               style: TextStyle(
                   fontSize: screenWidth * 0.3, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: screenHeight * 0.1),
-            Container(
-              width: screenWidth * 0.8,
-              height: screenHeight * 0.4,
-              decoration: BoxDecoration(
-                color: ColorConstants.ZANAH,
-                borderRadius: BorderRadius.circular(30),
-              ),
+            SizedBox(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: screenHeight * 0.08,
-                    width: screenWidth * 0.6,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorConstants.EDELWEISS,
-                        side: const BorderSide(color: Colors.white, width: 2),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        StringConstants.playButton,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: screenWidth * 0.08,
-                            color: ColorConstants.ALGA_MOSS),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenHeight * 0.05,
-                  ),
                   ContainerElevatedButton(
-                    onPressed: () {},
+                    height: screenHeight * 0.08,
+                    width: screenWidth * 0.5,
+                    backgroundColor: Color(0xffbEF4040),
                     child: const Text(
-                      StringConstants.settingsButton,
+                      TextConstants.playButton,
                       style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 15,
                           fontWeight: FontWeight.w900,
-                          color: ColorConstants.ALGA_MOSS),
+                          color: ColorConstants.NANO_WHITE),
                     ),
+                    onPressed: () {},
                   ),
                   SizedBox(
                     height: screenHeight * 0.02,
                   ),
                   ContainerElevatedButton(
+                    height: screenHeight * 0.08,
+                    width: screenWidth * 0.5,
+                    backgroundColor: Color(0xffb52D3D8),
                     child: const Text(
-                      StringConstants.exitButton,
+                      TextConstants.settingsButton,
                       style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 15,
                           fontWeight: FontWeight.w900,
-                          color: ColorConstants.ALGA_MOSS),
+                          color: ColorConstants.NANO_WHITE),
+                    ),
+                    onPressed: () => goToSettings(context),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                  ),
+                  ContainerElevatedButton(
+                    width: screenWidth * 0.5,
+                    height: screenHeight * 0.08,
+                    backgroundColor: Color(0xffbFF9800),
+                    child: const Text(
+                      TextConstants.exitButton,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: ColorConstants.NANO_WHITE),
                     ),
                     onPressed: () {},
                   )
@@ -85,4 +81,13 @@ class HomeView extends StatelessWidget {
       ),
     );
   }
+}
+
+void goToSettings(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SettingsView(),
+    ),
+  );
 }
