@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
+import 'package:flutter_game/product/widgets/container/settings_container.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -10,39 +11,95 @@ class SettingsView extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: ColorConstants.EDELWEISS,
+      backgroundColor: Color(0xffbFFD1E3),
       appBar: AppBar(
+        foregroundColor: Colors.white,
         centerTitle: true,
-        title: Text("Ayarlar"),
-        backgroundColor: ColorConstants.NANO_WHITE,
+        title: Text(
+          "Ayarlar",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color.fromARGB(185, 128, 45, 217),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: screenWidth * 0.9,
-              height: screenHeight * 0.07,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: ColorConstants.NANO_WHITE,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              alignment: Alignment.centerLeft,
+              child: TextFormField(
+                initialValue: "Takım 1",
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
               ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              alignment: Alignment.centerLeft,
+              child: TextFormField(
+                initialValue: "Takım 2",
+                decoration: const InputDecoration(border: InputBorder.none),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Divider(color: Colors.white, endIndent: 20, indent: 20),
+          const SizedBox(height: 20),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Ses & Titreşim"),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(),
-                      )
-                    ],
-                  )
+                  const Text("Ses & Titreşim"),
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 252, 162, 192),
+                                  width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Icon(Icons.vibration_sharp),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 252, 162, 192),
+                                  width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Icon(Icons.music_off),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
