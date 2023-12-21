@@ -1,9 +1,22 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_game/constants/app_color.dart';
+import 'package:flutter_game/product/widgets/buttons/settings_buttons.dart';
 import 'package:flutter_game/product/widgets/container/settings_container.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
+
+  @override
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
+  Color musicOff = Colors.black.withOpacity(0);
+  Color vibOff = Colors.black.withOpacity(0);
+
+  bool isVib = true;
+  bool isMusic = true;
 
   @override
   Widget build(BuildContext context) {
@@ -11,11 +24,12 @@ class SettingsView extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffbFFD1E3),
       appBar: AppBar(
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Ayarlar",
           style: TextStyle(color: Colors.white),
         ),
@@ -68,36 +82,138 @@ class SettingsView extends StatelessWidget {
                 children: [
                   const Text("Ses & Titreşim"),
                   SizedBox(
-                    width: 120,
+                    width: 150,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 252, 162, 192),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(Icons.vibration_sharp),
+                        SettingButton(
+                          child: Icon(Icons.vibration),
+                          color: vibOff,
+                          onPressed: () {
+                            setState(() {
+                              vibOff = isVib
+                                  ? const Color.fromARGB(255, 252, 162, 192)
+                                  : Colors.black.withOpacity(0);
+                              isVib = !isVib;
+                            });
+                          },
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 252, 162, 192),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(Icons.music_off),
-                        ),
+                        SettingButton(
+                            child: Icon(Icons.music_off),
+                            onPressed: () {
+                              setState(() {
+                                musicOff = isMusic
+                                    ? const Color.fromARGB(255, 252, 162, 192)
+                                    : Colors.black.withOpacity(0);
+                                isMusic = !isMusic;
+                              });
+                            },
+                            color: musicOff)
                       ],
                     ),
                   ),
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 20),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SettingButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                  Text(
+                    "20 puan",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  SettingButton(
+                    child: Icon(Icons.remove),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SettingButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                  Text(
+                    "50 saniye",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  SettingButton(
+                    child: Icon(Icons.remove),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          SettingsContainer(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            child: Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SettingButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                  Text(
+                    "50 saniye",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  SettingButton(
+                    child: Icon(Icons.remove),
+                    onPressed: () {},
+                    color: Colors.black.withOpacity(0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 30),
+          ElevatedButton(
+            child: Text(
+              'Kaydet',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20),
+            ),
+            style: ElevatedButton.styleFrom(
+              padding:
+                  EdgeInsets.only(left: 100, right: 100, top: 15, bottom: 15),
+              primary: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            ),
+            onPressed: () {},
           ),
         ],
       ),
