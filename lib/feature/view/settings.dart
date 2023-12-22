@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_game/product/widgets/buttons/settings_buttons.dart';
 import 'package:flutter_game/product/widgets/container/settings_container.dart';
@@ -185,7 +183,7 @@ class _SettingsViewState extends State<SettingsView> {
                     color: Colors.black.withOpacity(0),
                   ),
                   Text(
-                    "50 saniye",
+                    "3 hak",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   SettingButton(
