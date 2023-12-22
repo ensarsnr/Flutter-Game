@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/constants/app_text.dart';
+import 'package:flutter_game/feature/view/game.dart';
 import 'package:flutter_game/feature/view/settings.dart';
 import 'package:flutter_game/product/widgets/buttons/home_buttons.dart';
 
@@ -39,7 +40,7 @@ class HomeView extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                           color: ColorConstants.NANO_WHITE),
                     ),
-                    onPressed: () {},
+                    onPressed: () => goToGame(context),
                   ),
                   SizedBox(
                     height: screenHeight * 0.02,
@@ -90,4 +91,9 @@ void goToSettings(BuildContext context) {
       builder: (context) => const SettingsView(),
     ),
   );
+}
+
+void goToGame(BuildContext context) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => const GameView()));
 }
