@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     height: screenHeight * 0.08,
                     width: screenWidth * 0.5,
-                    backgroundColor: Color(0xffbEF4040),
+                    backgroundColor: const Color(0xffbEF4040),
                     child: const Text(
                       TextConstants.playButton,
                       style: TextStyle(
@@ -48,7 +48,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     height: screenHeight * 0.08,
                     width: screenWidth * 0.5,
-                    backgroundColor: Color(0xffb52D3D8),
+                    backgroundColor: const Color(0xffb52D3D8),
                     child: const Text(
                       TextConstants.settingsButton,
                       style: TextStyle(
@@ -64,7 +64,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     width: screenWidth * 0.5,
                     height: screenHeight * 0.08,
-                    backgroundColor: Color(0xffbFF9800),
+                    backgroundColor: const Color(0xffbFF9800),
                     child: const Text(
                       TextConstants.exitButton,
                       style: TextStyle(
