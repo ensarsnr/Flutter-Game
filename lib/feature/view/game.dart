@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
@@ -12,12 +14,20 @@ class GameView extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    // AYrı bir puanlama değişkeni oluştur
+    // takım1 = 0;
+    // takım2 = 0;
+    // provider'dan aldığım point ile bunları artılarız. takım2 = takım2 + point, eğer doğru bulduysalar.
+    // yanlış ise çıkarılır.
+
     return Consumer<SettingsProvider>(
         builder: (context, settingsProvider, child) {
       String team1 = settingsProvider.team1 ?? "Takım 1";
       String team2 = settingsProvider.team2 ?? "Takım 2";
       int second = settingsProvider.second ?? 50;
       int health = settingsProvider.lives ?? 3;
+      // Puanlama, default olarak 20 olarak ayarlandı. Kazanan 20 puan alıyor üstüne 40, 50 diye artıyor
+      int point = settingsProvider.point ?? 20;
 
       return Scaffold(
         backgroundColor: ColorConstants.EDELWEISS,
@@ -137,7 +147,60 @@ class GameView extends StatelessWidget {
                   ],
                 )),
             Container(
-              child: Text("data"),
+              child: Column(
+                children: [
+                  Text(
+                    "Başlık",
+                    style: TextStyle(
+                        color: Colors.purple,
+                        fontSize: 60,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  Divider(
+                    height: 2,
+                    endIndent: 70,
+                    indent: 70,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    "data",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "data",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "data",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "data",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "data",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
             Container(
               height: screenHeight * 0.13,
