@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
+import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 
 class GameView extends StatelessWidget {
   const GameView({super.key});
@@ -33,7 +34,7 @@ class GameView extends StatelessWidget {
                           color: Colors.white,
                         ),
                         Text(
-                          "data",
+                          "DABUUU",
                           style: TextStyle(color: Colors.white),
                         ),
                         Icon(
@@ -130,18 +131,51 @@ class GameView extends StatelessWidget {
             child: Text("data"),
           ),
           Container(
-            height: screenHeight * 0.1,
+            height: screenHeight * 0.13,
             decoration: const BoxDecoration(
                 color: Color.fromRGBO(126, 48, 225, 0.984),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(30),
                     topLeft: Radius.circular(30))),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(Icons.close, color: Colors.white),
-                Icon(Icons.loop, color: Colors.white),
-                Icon(Icons.check, color: Colors.white),
+                GameButtons(
+                  onPressed: () {},
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.pink,
+                ),
+                GameButtons(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Text(
+                        "3",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Icon(
+                        Icons.loop,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                  backgroundColor: Colors.lightBlue,
+                ),
+                GameButtons(
+                  onPressed: () {},
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.green,
+                ),
               ],
             ),
           ),
