@@ -15,7 +15,8 @@ class GameButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
+          padding:
+              const EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
