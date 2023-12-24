@@ -1,40 +1,39 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
-import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
+import 'package:flutter_game/feature/view/word_card.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
+import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
 
-class GameView extends StatelessWidget {
-  const GameView({super.key});
+class GameView extends StatefulWidget {
+  const GameView({Key? key}) : super(key: key);
+
+  @override
+  _GameViewState createState() => _GameViewState();
+}
+
+class _GameViewState extends State<GameView> {
+  bool isPaused = true;
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    // AYrı bir puanlama değişkeni oluştur
-    // takım1 = 0;
-    // takım2 = 0;
-    // provider'dan aldığım point ile bunları artılarız. takım2 = takım2 + point, eğer doğru bulduysalar.
-    // yanlış ise çıkarılır.
-
     return Consumer<SettingsProvider>(
-        builder: (context, settingsProvider, child) {
-      String team1 = settingsProvider.team1 ?? "Takım 1";
-      String team2 = settingsProvider.team2 ?? "Takım 2";
-      int second = settingsProvider.second ?? 50;
-      int health = settingsProvider.lives ?? 3;
-      // Puanlama, default olarak 20 olarak ayarlandı. Kazanan 20 puan alıyor üstüne 40, 50 diye artıyor
-      int point = settingsProvider.point ?? 20;
+      builder: (context, settingsProvider, child) {
+        String team1 = settingsProvider.team1 ?? "Takım 1";
+        String team2 = settingsProvider.team2 ?? "Takım 2";
+        int second = settingsProvider.second ?? 50;
+        int health = settingsProvider.lives ?? 3;
+        int point = settingsProvider.point ?? 20;
 
-      return Scaffold(
-        backgroundColor: ColorConstants.EDELWEISS,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
+        return Scaffold(
+          backgroundColor: ColorConstants.EDELWEISS,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
@@ -44,22 +43,28 @@ class GameView extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(30),
-                      child: const Row(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.exit_to_app,
+                          IconButton(
+                            icon: Icon(Icons.exit_to_app),
                             color: Colors.white,
+                            onPressed: () {},
                           ),
                           Text(
                             "DABUUU",
                             style: TextStyle(color: Colors.white),
                           ),
-                          Icon(
-                            Icons.pause,
+                          IconButton(
+                            icon: Icon(Icons.pause),
                             color: Colors.white,
-                          )
+                            onPressed: () {
+                              setState(() {
+                                isPaused = !isPaused;
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -145,115 +150,86 @@ class GameView extends StatelessWidget {
                       ),
                     ),
                   ],
-                )),
-            Container(
-              child: Column(
-                children: [
-                  Text(
-                    "Başlık",
-                    style: TextStyle(
-                        color: Colors.purple,
-                        fontSize: 60,
-                        fontWeight: FontWeight.w900),
-                  ),
-                  Divider(
-                    height: 2,
-                    endIndent: 70,
-                    indent: 70,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "data",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "data",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "data",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "data",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "data",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Container(
-              height: screenHeight * 0.13,
-              decoration: const BoxDecoration(
-                  color: Color.fromRGBO(126, 48, 225, 0.984),
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GameButtons(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.pink,
-                  ),
-                  GameButtons(
-                    onPressed: () {},
-                    child: Row(
-                      children: [
-                        Text(
-                          health.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+              Container(
+                child: isPaused
+                    ? Container(
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.pause,
+                            size: 200,
+                            color: Color.fromARGB(255, 117, 117, 117),
                           ),
+                          onPressed: () {
+                            setState(() {
+                              isPaused = !isPaused;
+                            });
+                          },
                         ),
-                        Icon(
-                          Icons.loop,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                    backgroundColor: Colors.lightBlue,
-                  ),
-                  GameButtons(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.green,
-                  ),
-                ],
+                      )
+                    : const WordCards(),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              // Bottom
+              Container(
+                height: screenHeight * 0.13,
+                decoration: const BoxDecoration(
+                    color: Color.fromRGBO(126, 48, 225, 0.984),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(30),
+                        topLeft: Radius.circular(30))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GameButtons(
+                      onPressed: () {
+                        if (isPaused) {
+                          print("Boş tıkladı");
+                        } else {
+                          debugPrint("çarpı");
+                        }
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: Colors.pink,
+                    ),
+                    GameButtons(
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Text(
+                            health.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Icon(
+                            Icons.loop,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                    GameButtons(
+                      onPressed: () {},
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
