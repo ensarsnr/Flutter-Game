@@ -4,6 +4,8 @@ import 'package:flutter_game/feature/view/word_card.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class GameView extends StatefulWidget {
   const GameView({Key? key}) : super(key: key);
@@ -14,6 +16,9 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> {
   bool isPaused = true;
+
+  final CountdownController _timerController =
+      new CountdownController(autoStart: false);
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +67,9 @@ class _GameViewState extends State<GameView> {
                             onPressed: () {
                               setState(() {
                                 isPaused = !isPaused;
+                                if (isPaused) {
+                                  _timerController.pause();
+                                }
                               });
                             },
                           ),
@@ -112,11 +120,24 @@ class _GameViewState extends State<GameView> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
-                              child: Text(
-                                second.toString(),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                              child: Countdown(
+                                controller: _timerController,
+                                seconds: second,
+                                interval: const Duration(milliseconds: 100),
+                                build: (BuildContext context, double time) {
+                                  return Text(
+                                    time.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                },
+                                onFinished: () {
+                                  return Center(
+                                    child: Text("finit"),
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -164,6 +185,11 @@ class _GameViewState extends State<GameView> {
                           onPressed: () {
                             setState(() {
                               isPaused = !isPaused;
+                              if (!isPaused) {
+                                _timerController.start();
+                              } else {
+                                _timerController.pause();
+                              }
                             });
                           },
                         ),
