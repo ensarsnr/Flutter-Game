@@ -14,11 +14,33 @@ class GameView extends StatefulWidget {
   _GameViewState createState() => _GameViewState();
 }
 
-class _GameViewState extends State<GameView> {
+class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   bool isPaused = true;
-
   final CountdownController _timerController =
       new CountdownController(autoStart: false);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // Uygulama arka plana düştüğünde zamanlayıcı durduruyoruz.
+      _timerController.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      // Uygulama tekrar ön plana çıktığında zamanlayıcıyı kaldığı yerden devam ettiriyorum
+      _timerController.resume();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
