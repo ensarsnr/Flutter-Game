@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Uygulamanın tam ekran modunda çalışmasına yarıyor.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     return const MaterialApp(
