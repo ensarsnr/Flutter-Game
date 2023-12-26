@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
-import 'package:flutter_game/feature/view/word_card.dart';
+import 'package:flutter_game/feature/view/home.dart';
+import 'package:flutter_game/product/widgets/card/game_card.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,12 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   bool isPaused = true;
+
+  // Takım güncellemeleri
+  bool isTeamTurn = true;
+  int teamPoint1 = 0;
+  int teamPoint2 = 0;
+
   final CountdownController _timerController =
       new CountdownController(autoStart: false);
 
@@ -44,11 +51,16 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    int teamHealth = Provider.of<SettingsProvider>(context).lives ?? 3;
+
+    int teamHealt1 = teamHealth;
+    int teamHealt2 = teamHealth;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Consumer<SettingsProvider>(
       builder: (context, settingsProvider, child) {
+        // Provider
         String team1 = settingsProvider.team1 ?? "Takım 1";
         String team2 = settingsProvider.team2 ?? "Takım 2";
         int second = settingsProvider.second ?? 50;
@@ -77,7 +89,37 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                           IconButton(
                             icon: Icon(Icons.exit_to_app),
                             color: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext contex) {
+                                    return AlertDialog(
+                                      title: Text("Dikkat!"),
+                                      actions: [
+                                        Text(
+                                          "Oyundan ayrılmak istediğine emin misin?",
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () => goToHome(contex),
+                                          child: Text(
+                                            "Devam et",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromARGB(
+                                                255, 253, 130, 122),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
                           ),
                           Text(
                             "DABUUU",
@@ -91,6 +133,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                 isPaused = !isPaused;
                                 if (isPaused) {
                                   _timerController.pause();
+                                } else {
+                                  _timerController.resume();
                                 }
                               });
                             },
@@ -125,9 +169,9 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const Text(
-                                  "0",
-                                  style: TextStyle(
+                                Text(
+                                  teamPoint1.toString(),
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -156,9 +200,20 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                   );
                                 },
                                 onFinished: () {
-                                  return Center(
-                                    child: Text("finit"),
-                                  );
+                                  setState(() {
+                                    // Süre bittiğinde takım sırası değişecek
+                                    isTeamTurn = !isTeamTurn;
+
+                                    // Oyun round kısmını buraya ekleyebiliriz. Her döndüğünde 2 şer artması gerekiyor
+                                    // Eğer ki kullanıcı 10 el atmak istiyorsa burası 2 katı artması yani 20 kere dönmesi gerekiyor.
+                                    // 20 elin sonunda oyun kendisini bitirp en yüksek skoru alan takımı ekranda göstermesi gerekiyor.
+
+                                    // Timer'ı sıfırla
+
+                                    _timerController.restart();
+                                    _timerController.pause();
+                                    isPaused = !isPaused;
+                                  });
                                 },
                               ),
                             ),
@@ -179,9 +234,9 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  const Text(
-                                    "0",
-                                    style: TextStyle(
+                                  Text(
+                                    teamPoint2.toString(),
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   )
@@ -198,24 +253,35 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
               Container(
                 child: isPaused
                     ? Container(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.pause,
-                            size: 200,
-                            color: Color.fromARGB(255, 117, 117, 117),
+                        child: Column(
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.pause,
+                              size: 200,
+                              color: Color.fromARGB(255, 117, 117, 117),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPaused = !isPaused;
+                                if (!isPaused) {
+                                  _timerController.start();
+                                } else {
+                                  _timerController.pause();
+                                }
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            setState(() {
-                              isPaused = !isPaused;
-                              if (!isPaused) {
-                                _timerController.start();
-                              } else {
-                                _timerController.pause();
-                              }
-                            });
-                          },
-                        ),
-                      )
+                          Text(
+                            isTeamTurn ? team1 : team2,
+                            style: TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 117, 117, 117),
+                            ),
+                          )
+                        ],
+                      ))
                     : const WordCards(),
               ),
               // Bottom
@@ -231,11 +297,17 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                   children: [
                     GameButtons(
                       onPressed: () {
-                        if (isPaused) {
-                          print("Boş tıkladı");
-                        } else {
-                          debugPrint("çarpı");
-                        }
+                        setState(() {
+                          isPaused
+                              ? null
+                              : setState(() {
+                                  if (isTeamTurn) {
+                                    teamPoint1 = teamPoint1 - point;
+                                  } else {
+                                    teamPoint2 = teamPoint2 - point;
+                                  }
+                                });
+                        });
                       },
                       child: Icon(
                         Icons.close,
@@ -244,11 +316,23 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                       backgroundColor: Colors.pink,
                     ),
                     GameButtons(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (!isPaused) {
+                          setState(() {
+                            if (isTeamTurn) {
+                              teamHealt1 =
+                                  teamHealt1 - 1; // Takım 1'in sağlığını eksilt
+                            } else {
+                              teamHealt2--; // Takım 2'nin sağlığını eksilt
+                            }
+                            print(teamHealt1);
+                          });
+                        }
+                      },
                       child: Row(
                         children: [
                           Text(
-                            health.toString(),
+                            teamHealt1.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -264,7 +348,17 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                       backgroundColor: Colors.lightBlue,
                     ),
                     GameButtons(
-                      onPressed: () {},
+                      onPressed: () {
+                        isPaused
+                            ? null
+                            : setState(() {
+                                if (isTeamTurn) {
+                                  teamPoint1 = teamPoint1 + point;
+                                } else {
+                                  teamPoint2 = teamPoint2 + point;
+                                }
+                              });
+                      },
                       child: Icon(
                         Icons.check,
                         color: Colors.white,
@@ -280,4 +374,9 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
       },
     );
   }
+}
+
+void goToHome(BuildContext context) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => const HomeView()));
 }
