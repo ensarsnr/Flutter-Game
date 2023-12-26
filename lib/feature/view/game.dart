@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/feature/view/home.dart';
+import 'package:flutter_game/model/words/words_list.dart';
 import 'package:flutter_game/product/widgets/card/game_card.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
+import '../../model/words/words_list.dart';
 
 class GameView extends StatefulWidget {
   const GameView({Key? key}) : super(key: key);
@@ -14,6 +18,8 @@ class GameView extends StatefulWidget {
   @override
   _GameViewState createState() => _GameViewState();
 }
+
+int randomWords = 0;
 
 class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   bool isPaused = true;
@@ -282,7 +288,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                           )
                         ],
                       ))
-                    : const WordCards(),
+                    : WordCards(listData: tabooWords[randomNumber()]),
               ),
               // Bottom
               Container(
@@ -300,13 +306,16 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                         setState(() {
                           isPaused
                               ? null
-                              : setState(() {
-                                  if (isTeamTurn) {
-                                    teamPoint1 = teamPoint1 - point;
-                                  } else {
-                                    teamPoint2 = teamPoint2 - point;
-                                  }
-                                });
+                              : setState(
+                                  () {
+                                    if (isTeamTurn) {
+                                      teamPoint1 = teamPoint1 - point;
+                                    } else {
+                                      teamPoint2 = teamPoint2 - point;
+                                    }
+                                    randomNumber();
+                                  },
+                                );
                         });
                       },
                       child: Icon(
@@ -320,10 +329,9 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                         if (!isPaused) {
                           setState(() {
                             if (isTeamTurn) {
-                              teamHealt1 =
-                                  teamHealt1 - 1; // Takım 1'in sağlığını eksilt
+                              teamHealt1 = teamHealt1 - 1;
                             } else {
-                              teamHealt2--; // Takım 2'nin sağlığını eksilt
+                              teamHealt2--;
                             }
                             print(teamHealt1);
                           });
@@ -357,6 +365,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                 } else {
                                   teamPoint2 = teamPoint2 + point;
                                 }
+                                randomNumber();
                               });
                       },
                       child: Icon(
@@ -379,4 +388,10 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 void goToHome(BuildContext context) {
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => const HomeView()));
+}
+
+randomNumber() {
+  var intRandom = Random().nextInt(tabooWords.length);
+  print(intRandom);
+  return intRandom;
 }
