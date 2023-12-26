@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_game/feature/view/home.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Game',
