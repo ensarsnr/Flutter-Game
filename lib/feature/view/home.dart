@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/constants/app_text.dart';
 import 'package:flutter_game/feature/view/game.dart';
@@ -22,7 +25,9 @@ class HomeView extends StatelessWidget {
             Text(
               TextConstants.appTitle,
               style: TextStyle(
-                  fontSize: screenWidth * 0.3, fontWeight: FontWeight.bold),
+                  fontSize: screenWidth * 0.2,
+                  fontWeight: FontWeight.bold,
+                  color: ColorConstants.NANO_WHITE),
             ),
             SizedBox(height: screenHeight * 0.1),
             SizedBox(
@@ -72,7 +77,10 @@ class HomeView extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                           color: ColorConstants.NANO_WHITE),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      // Uygulamayı kapatıyor.
+                      exit(0);
+                    },
                   )
                 ],
               ),
