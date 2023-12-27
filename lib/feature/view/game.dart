@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/feature/view/home.dart';
 import 'package:flutter_game/model/words/words_list.dart';
@@ -28,6 +29,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   bool isTeamTurn = true;
   int teamPoint1 = 0;
   int teamPoint2 = 0;
+  int round = 0;
 
   final CountdownController _timerController =
       new CountdownController(autoStart: false);
@@ -36,6 +38,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   @override
@@ -48,19 +51,17 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
       // Uygulama arka plana düştüğünde zamanlayıcı durduruyoruz.
+      print("Arka plana düştü");
+      isPaused = true;
       _timerController.pause();
     } else if (state == AppLifecycleState.resumed) {
       // Uygulama tekrar ön plana çıktığında zamanlayıcıyı kaldığı yerden devam ettiriyorum
-      _timerController.resume();
+      isPaused = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    int teamHealth = Provider.of<SettingsProvider>(context).lives ?? 3;
-
-    int teamHealt1 = teamHealth;
-    int teamHealt2 = teamHealth;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -210,15 +211,50 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                     // Süre bittiğinde takım sırası değişecek
                                     isTeamTurn = !isTeamTurn;
 
-                                    // Oyun round kısmını buraya ekleyebiliriz. Her döndüğünde 2 şer artması gerekiyor
-                                    // Eğer ki kullanıcı 10 el atmak istiyorsa burası 2 katı artması yani 20 kere dönmesi gerekiyor.
-                                    // 20 elin sonunda oyun kendisini bitirp en yüksek skoru alan takımı ekranda göstermesi gerekiyor.
-
                                     // Timer'ı sıfırla
 
                                     _timerController.restart();
                                     _timerController.pause();
-                                    isPaused = !isPaused;
+                                    isPaused = true;
+
+                                    // Her roundda 1 sayı eksilecek.
+                                    round++;
+                                    if (round >= 2) {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text("Tebrikler"),
+                                              actions: [
+                                                Text(
+                                                  teamPoint1 > teamPoint2
+                                                      ? 'Kazanan takım $team1'
+                                                      : teamPoint1 < teamPoint2
+                                                          ? 'Kazanan takım $team2'
+                                                          : 'Berabere',
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      goToHome(context),
+                                                  child: const Text("Anasayfa"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      teamPoint1 = 0;
+                                                      teamPoint2 = 0;
+                                                      round = 0;
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Tekrar oyna"),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                    print("round: " + round.toString());
                                   });
                                 },
                               ),
@@ -270,10 +306,10 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                             onPressed: () {
                               setState(() {
                                 isPaused = !isPaused;
-                                if (!isPaused) {
-                                  _timerController.start();
-                                } else {
+                                if (isPaused) {
                                   _timerController.pause();
+                                } else {
+                                  _timerController.resume();
                                 }
                               });
                             },
@@ -326,21 +362,14 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                     ),
                     GameButtons(
                       onPressed: () {
-                        if (!isPaused) {
-                          setState(() {
-                            if (isTeamTurn) {
-                              teamHealt1 = teamHealt1 - 1;
-                            } else {
-                              teamHealt2--;
-                            }
-                            print(teamHealt1);
-                          });
-                        }
+                        setState(() {
+                          health = health! - 1;
+                        });
                       },
                       child: Row(
                         children: [
                           Text(
-                            teamHealt1.toString(),
+                            health.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
