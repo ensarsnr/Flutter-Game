@@ -29,7 +29,6 @@ class _SettingsViewState extends State<SettingsView> {
   // Puan, saniye ve hak işlemleri
   int point = 20;
   int second = 50;
-  int health = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -196,38 +195,6 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          SettingsContainer(
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
-            child: Container(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SettingButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      setState(() => health > 5 ? 5 : health++);
-                    },
-                    color: Colors.black.withOpacity(0),
-                  ),
-                  Text(
-                    '${health.toString()} hak',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  SettingButton(
-                    child: Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() => health < 0 ? 0 : health--);
-                    },
-                    color: Colors.black.withOpacity(0),
-                  ),
-                ],
-              ),
-            ),
-          ),
           const SizedBox(
             height: 20,
           ),
@@ -250,7 +217,6 @@ class _SettingsViewState extends State<SettingsView> {
             onPressed: () {
               settingsProvider.setTeam1(teamOneController.text);
               settingsProvider.setTeam2(teamTwoController.text);
-              settingsProvider.setLives(health);
               settingsProvider.setSecond(second);
               Navigator.pop(context);
             },
