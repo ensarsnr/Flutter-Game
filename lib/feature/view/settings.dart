@@ -53,7 +53,7 @@ class _SettingsViewState extends State<SettingsView> {
       body: Column(
         children: [
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           SettingsContainer(
             screenHeight: screenHeight,
@@ -70,7 +70,7 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           SettingsContainer(
             screenHeight: screenHeight,
@@ -145,12 +145,7 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.add),
                     onPressed: () {
-                      setState(() {
-                        point = point + 5;
-                        if (point > 100) {
-                          point = 100;
-                        }
-                      });
+                      setState(() => point > 100 ? 100 : point = point + 5);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
@@ -162,12 +157,7 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.remove),
                     onPressed: () {
-                      setState(() {
-                        point = point - 5;
-                        if (point < 0) {
-                          point = 0;
-                        }
-                      });
+                      setState(() => point < 5 ? 5 : point = point - 5);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
@@ -187,12 +177,7 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.add),
                     onPressed: () {
-                      setState(() {
-                        second = second + 10;
-                        if (second > 600) {
-                          second = 600;
-                        }
-                      });
+                      setState(() => second > 600 ? 600 : second = second + 10);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
@@ -203,12 +188,7 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.remove),
                     onPressed: () {
-                      setState(() {
-                        second = second - 10;
-                        if (second < 10) {
-                          second = 10;
-                        }
-                      });
+                      setState(() => second <= 10 ? 10 : second = second - 10);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
@@ -228,12 +208,7 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.add),
                     onPressed: () {
-                      setState(() {
-                        health++;
-                        if (health > 5) {
-                          health = 5;
-                        }
-                      });
+                      setState(() => health > 5 ? 5 : health++);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
@@ -245,18 +220,16 @@ class _SettingsViewState extends State<SettingsView> {
                   SettingButton(
                     child: Icon(Icons.remove),
                     onPressed: () {
-                      setState(() {
-                        health--;
-                        if (health < 0) {
-                          health = 0;
-                        }
-                      });
+                      setState(() => health < 0 ? 0 : health--);
                     },
                     color: Colors.black.withOpacity(0),
                   ),
                 ],
               ),
             ),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           const SizedBox(height: 30),
           ElevatedButton(
@@ -279,6 +252,7 @@ class _SettingsViewState extends State<SettingsView> {
               settingsProvider.setTeam2(teamTwoController.text);
               settingsProvider.setLives(health);
               settingsProvider.setSecond(second);
+              Navigator.pop(context);
             },
           ),
         ],
