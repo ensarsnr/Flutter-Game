@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_game/constants/app_color.dart';
+import 'package:flutter_game/feature/view/game_end.dart';
 import 'package:flutter_game/feature/view/home.dart';
 import 'package:flutter_game/model/words/words_list.dart';
 import 'package:flutter_game/product/widgets/card/game_card.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
-import '../../model/words/words_list.dart';
+import 'package:vibration/vibration.dart';
 
 class GameView extends StatefulWidget {
   const GameView({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ int randomWords = 0;
 
 class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   bool isPaused = true;
+  bool isTimeOver = false;
 
   // Takım güncellemeleri
   bool isTeamTurn = true;
@@ -32,7 +34,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   int round = 0;
 
   final CountdownController _timerController =
-      new CountdownController(autoStart: false);
+      CountdownController(autoStart: false);
 
   @override
   void initState() {
@@ -71,7 +73,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
         String team1 = settingsProvider.team1 ?? "Takım 1";
         String team2 = settingsProvider.team2 ?? "Takım 2";
         int second = settingsProvider.second ?? 50;
-        int health = settingsProvider.lives ?? 3;
         int point = settingsProvider.point ?? 20;
 
         return Scaffold(
@@ -198,6 +199,9 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                 seconds: second,
                                 interval: const Duration(milliseconds: 100),
                                 build: (BuildContext context, double time) {
+                                  if (time < 5) {
+                                    vibratePhone();
+                                  }
                                   return Text(
                                     time.toString(),
                                     style: const TextStyle(
@@ -220,39 +224,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                     // Her roundda 1 sayı eksilecek.
                                     round++;
                                     if (round >= 2) {
-                                      showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text("Tebrikler"),
-                                              actions: [
-                                                Text(
-                                                  teamPoint1 > teamPoint2
-                                                      ? 'Kazanan takım $team1'
-                                                      : teamPoint1 < teamPoint2
-                                                          ? 'Kazanan takım $team2'
-                                                          : 'Berabere',
-                                                ),
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      goToHome(context),
-                                                  child: const Text("Anasayfa"),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      teamPoint1 = 0;
-                                                      teamPoint2 = 0;
-                                                      round = 0;
-                                                    });
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text("Tekrar oyna"),
-                                                ),
-                                              ],
-                                            );
-                                          });
+                                      isTimeOver = true;
                                     }
                                     print("round: " + round.toString());
                                   });
@@ -296,34 +268,48 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                 child: isPaused
                     ? Container(
                         child: Column(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.pause,
-                              size: 200,
-                              color: Color.fromARGB(255, 117, 117, 117),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                isPaused = !isPaused;
-                                if (isPaused) {
-                                  _timerController.pause();
-                                } else {
-                                  _timerController.resume();
-                                }
-                              });
-                            },
-                          ),
-                          Text(
-                            isTeamTurn ? team1 : team2,
-                            style: TextStyle(
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 117, 117, 117),
-                            ),
-                          )
-                        ],
-                      ))
+                          children: [
+                            isTimeOver
+                                ? EndGame(
+                                    winnerTeam: teamPoint1 > teamPoint2
+                                        ? team1
+                                        : teamPoint1 < teamPoint2
+                                            ? team2
+                                            : "Berabere")
+                                : Column(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.pause,
+                                          size: 200,
+                                          color: Color.fromARGB(
+                                              255, 117, 117, 117),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            isPaused = !isPaused;
+                                            if (isPaused) {
+                                              _timerController.pause();
+                                            } else {
+                                              _timerController.resume();
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        isTeamTurn ? team1 : team2,
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(
+                                              255, 117, 117, 117),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                          ],
+                        ),
+                      )
                     : WordCards(listData: tabooWords[randomNumber()]),
               ),
               // Bottom
@@ -362,30 +348,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                     ),
                     GameButtons(
                       onPressed: () {
-                        setState(() {
-                          health = health! - 1;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            health.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Icon(
-                            Icons.loop,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                      backgroundColor: Colors.lightBlue,
-                    ),
-                    GameButtons(
-                      onPressed: () {
                         isPaused
                             ? null
                             : setState(() {
@@ -419,8 +381,12 @@ void goToHome(BuildContext context) {
       context, MaterialPageRoute(builder: (context) => const HomeView()));
 }
 
-randomNumber() {
+int randomNumber() {
   var intRandom = Random().nextInt(tabooWords.length);
   print(intRandom);
   return intRandom;
+}
+
+void vibratePhone() async {
+  Vibration.vibrate(duration: 500); // Telefonu 500 milisaniye boyunca titreştir
 }
