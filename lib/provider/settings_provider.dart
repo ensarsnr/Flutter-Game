@@ -1,13 +1,6 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
-import '../model/settings_model.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  List<Settings> _decisions = [];
-
-  UnmodifiableListView<Settings> get allDecisions =>
-      UnmodifiableListView(_decisions);
-
   String? team1;
   String? team2;
   bool? musicOff;
