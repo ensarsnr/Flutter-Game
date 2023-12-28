@@ -3,6 +3,7 @@ import 'package:flutter_game/product/widgets/buttons/settings_buttons.dart';
 import 'package:flutter_game/product/widgets/container/settings_container.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -106,6 +107,7 @@ class _SettingsViewState extends State<SettingsView> {
                           child: Icon(Icons.vibration),
                           color: vibOff,
                           onPressed: () {
+                            Vibration.vibrate(duration: 100, amplitude: 1);
                             setState(() {
                               vibOff = isVib
                                   ? const Color.fromARGB(255, 252, 162, 192)
