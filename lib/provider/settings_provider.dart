@@ -10,7 +10,6 @@ class SettingsProvider extends ChangeNotifier {
 
   String? team1;
   String? team2;
-  int? lives;
   bool? musicOff;
   int? point;
   int? second;
@@ -23,11 +22,6 @@ class SettingsProvider extends ChangeNotifier {
 
   void setTeam2(String value) {
     team2 = value;
-    notifyListeners();
-  }
-
-  void setLives(int value) {
-    lives = value;
     notifyListeners();
   }
 
