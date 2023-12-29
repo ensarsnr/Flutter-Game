@@ -8,4 +8,5 @@ class TextConstants {
   static const info = "Oyundan ayrılmak istediğine emin misin?";
   static const confirmButton = "Evet";
   static const draw = "Berabere";
+  static const continueText = "Devam et";
 }
