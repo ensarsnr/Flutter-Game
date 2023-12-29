@@ -149,6 +149,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                   _timerController.pause();
                                 } else {
                                   _timerController.resume();
+                                  randomWords =
+                                      Random().nextInt(tabooWords.length);
                                 }
                               });
                             },
