@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ekranın dönmesini engellemek için kullandım. Sadece dikey yönde olacak
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     // Uygulamanın tam ekran modunda çalışmasına yarıyor.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
