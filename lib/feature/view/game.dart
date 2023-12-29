@@ -32,6 +32,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   int teamPoint1 = 0;
   int teamPoint2 = 0;
   int round = 0;
+  int teamLives2 = 3;
+  int teamLives1 = 3;
 
   final CountdownController _timerController =
       CountdownController(autoStart: false);
@@ -67,6 +69,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    var intRandom = Random().nextInt(tabooWords.length);
+
     return Consumer<SettingsProvider>(
       builder: (context, settingsProvider, child) {
         // Provider
@@ -74,6 +78,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
         String team2 = settingsProvider.team2 ?? "Takım 2";
         int second = settingsProvider.second ?? 50;
         int point = settingsProvider.point ?? 20;
+        bool isVib = settingsProvider.vibOff ?? true;
 
         return Scaffold(
           backgroundColor: ColorConstants.EDELWEISS,
@@ -199,9 +204,12 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                 seconds: second,
                                 interval: const Duration(milliseconds: 100),
                                 build: (BuildContext context, double time) {
-                                  if (time < 5) {
-                                    vibratePhone();
-                                  }
+                                  if (isVib) {
+                                    if (time < 10 && time > 8) {
+                                      vibratePhone();
+                                      if (time < 8) {}
+                                    }
+                                  } else {}
                                   return Text(
                                     time.toString(),
                                     style: const TextStyle(
@@ -271,11 +279,31 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                           children: [
                             isTimeOver
                                 ? EndGame(
+                                    icon: teamPoint1 > teamPoint2
+                                        ? const Icon(
+                                            Icons.emoji_events_sharp,
+                                            size: 200,
+                                            color: Color.fromARGB(
+                                                255, 240, 218, 20),
+                                          )
+                                        : teamPoint2 > teamPoint1
+                                            ? const Icon(
+                                                Icons.emoji_events_sharp,
+                                                color: Color.fromARGB(
+                                                    255, 240, 218, 20),
+                                              )
+                                            : const Icon(
+                                                Icons
+                                                    .handshake_outlined, // Berabere durumu için handshake ikonu
+                                                size: 200,
+                                                color: Colors.blue,
+                                              ),
                                     winnerTeam: teamPoint1 > teamPoint2
                                         ? team1
                                         : teamPoint1 < teamPoint2
                                             ? team2
-                                            : "Berabere")
+                                            : "Berabere",
+                                  )
                                 : Column(
                                     children: [
                                       IconButton(
@@ -310,7 +338,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                           ],
                         ),
                       )
-                    : WordCards(listData: tabooWords[randomNumber()]),
+                    : WordCards(listData: tabooWords[randomWords]),
               ),
               // Bottom
               Container(
@@ -335,7 +363,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                     } else {
                                       teamPoint2 = teamPoint2 - point;
                                     }
-                                    randomNumber();
+                                    randomWords =
+                                        Random().nextInt(tabooWords.length);
                                   },
                                 );
                         });
@@ -347,6 +376,48 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                       backgroundColor: Colors.pink,
                     ),
                     GameButtons(
+                        onPressed: () {
+                          setState(() {
+                            isPaused
+                                ? null
+                                : setState(
+                                    () {
+                                      if (isTeamTurn) {
+                                        if (teamLives1 > 0) {
+                                          teamLives1--;
+                                          randomWords = Random()
+                                              .nextInt(tabooWords.length);
+                                        } else {}
+                                      } else {
+                                        if (teamLives2 > 0) {
+                                          teamLives2--;
+                                          randomWords = Random()
+                                              .nextInt(tabooWords.length);
+                                        } else {}
+                                      }
+                                    },
+                                  );
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              isTeamTurn
+                                  ? teamLives1.toString()
+                                  : teamLives2.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 17),
+                            ),
+                            Icon(
+                              Icons.loop,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                        backgroundColor: Colors.blue),
+                    GameButtons(
                       onPressed: () {
                         isPaused
                             ? null
@@ -356,7 +427,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                                 } else {
                                   teamPoint2 = teamPoint2 + point;
                                 }
-                                randomNumber();
+                                randomWords = intRandom =
+                                    Random().nextInt(tabooWords.length);
                               });
                       },
                       child: Icon(
@@ -379,12 +451,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 void goToHome(BuildContext context) {
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => const HomeView()));
-}
-
-int randomNumber() {
-  var intRandom = Random().nextInt(tabooWords.length);
-  print(intRandom);
-  return intRandom;
 }
 
 void vibratePhone() async {
