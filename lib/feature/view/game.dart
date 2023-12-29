@@ -1,15 +1,15 @@
+// ignore_for_file: library_private_types_in_public_api
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_game/constants/app_color.dart';
-import 'package:flutter_game/feature/view/game_end.dart';
+import 'package:flutter_game/feature/view/game_contents.dart';
 import 'package:flutter_game/feature/view/home.dart';
 import 'package:flutter_game/model/words/words_list.dart';
-import 'package:flutter_game/product/widgets/card/game_card.dart';
 import 'package:flutter_game/product/widgets/container/end_bottom.dart';
+import 'package:flutter_game/product/widgets/container/game/app_bar.dart';
+import 'package:flutter_game/product/widgets/container/game/bottom_bar.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
-import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
@@ -42,13 +42,13 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -56,7 +56,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
       // Uygulama arka plana düştüğünde zamanlayıcı durduruyoruz.
-      print("Arka plana düştü");
       isPaused = true;
       _timerController.pause();
     } else if (state == AppLifecycleState.resumed) {
@@ -69,8 +68,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    var intRandom = Random().nextInt(tabooWords.length);
 
     return Consumer<SettingsProvider>(
       builder: (context, settingsProvider, child) {
@@ -86,365 +83,151 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30)),
-                  color: Color.fromRGBO(126, 48, 225, 0.984),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.exit_to_app),
-                            color: Colors.white,
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext contex) {
-                                    return AlertDialog(
-                                      title: Text("Dikkat!"),
-                                      actions: [
-                                        Text(
-                                          "Oyundan ayrılmak istediğine emin misin?",
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => goToHome(contex),
-                                          child: Text(
-                                            "Devam et",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color.fromARGB(
-                                                255, 253, 130, 122),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                          ),
-                          Text(
-                            "DABUUU",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.pause),
-                            color: Colors.white,
-                            onPressed: () {
-                              setState(() {
-                                isPaused = !isPaused;
-                                if (isPaused) {
-                                  _timerController.pause();
-                                } else {
-                                  _timerController.resume();
-                                  randomWords =
-                                      Random().nextInt(tabooWords.length);
-                                }
-                              });
-                            },
-                          ),
-                        ],
+              GameAppBar(
+                navPaused: () {
+                  setState(() {
+                    isPaused = !isPaused;
+                    if (isPaused) {
+                      _timerController.pause();
+                    } else {
+                      _timerController.resume();
+                    }
+                  });
+                },
+                screenHeight: screenHeight,
+                screenWidth: screenWidth,
+                team1: team1,
+                team2: team2,
+                teamPoint1: teamPoint1,
+                teamPoint2: teamPoint2,
+                child: Countdown(
+                  controller: _timerController,
+                  seconds: second,
+                  build: (BuildContext context, double time) {
+                    if (isVib) {
+                      if (time < 10 && time > 8) {
+                        vibratePhone();
+                        if (time < 8) {}
+                      }
+                    } else {}
+                    return Text(
+                      time.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    Container(
-                      decoration: const BoxDecoration(
-                          color: ColorConstants.THICK_PURPLE,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20))),
-                      padding: const EdgeInsets.only(
-                          left: 30, right: 30, bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: screenHeight * 0.1,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(248, 161, 89, 255),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            width: screenWidth * 0.3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  team1,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  teamPoint1.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: screenWidth * 0.2,
-                            height: screenHeight * 0.1,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(248, 161, 89, 255),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Countdown(
-                                controller: _timerController,
-                                seconds: second,
-                                interval: const Duration(milliseconds: 100),
-                                build: (BuildContext context, double time) {
-                                  if (isVib) {
-                                    if (time < 10 && time > 8) {
-                                      vibratePhone();
-                                      if (time < 8) {}
-                                    }
-                                  } else {}
-                                  return Text(
-                                    time.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                                onFinished: () {
-                                  setState(() {
-                                    // Süre bittiğinde takım sırası değişecek
-                                    isTeamTurn = !isTeamTurn;
+                    );
+                  },
+                  interval: const Duration(milliseconds: 100),
+                  onFinished: () {
+                    setState(() {
+                      // Süre bittiğinde takım sırası değişecek
+                      isTeamTurn = !isTeamTurn;
 
-                                    // Timer'ı sıfırla
+                      // Timer'ı sıfırla
+                      _timerController.restart();
+                      _timerController.pause();
+                      isPaused = true;
 
-                                    _timerController.restart();
-                                    _timerController.pause();
-                                    isPaused = true;
-
-                                    // Her roundda 1 sayı eksilecek.
-                                    round++;
-                                    if (round >= 2) {
-                                      isTimeOver = true;
-                                    }
-                                    print("round: " + round.toString());
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: screenHeight * 0.1,
-                            width: screenWidth * 0.3,
-                            decoration: BoxDecoration(
-                                color: const Color.fromARGB(248, 161, 89, 255),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    team2,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    teamPoint2.toString(),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+                      // Her roundda 1 sayı eksilecek.
+                      round++;
+                      if (round >= 2) {
+                        isTimeOver = true;
+                      }
+                    });
+                  },
                 ),
               ),
-              Container(
-                child: isPaused
-                    ? Container(
-                        child: Column(
-                          children: [
-                            isTimeOver
-                                ? EndGame(
-                                    icon: teamPoint1 > teamPoint2
-                                        ? const Icon(
-                                            Icons.emoji_events_sharp,
-                                            size: 200,
-                                            color: Color.fromARGB(
-                                                255, 240, 218, 20),
-                                          )
-                                        : teamPoint2 > teamPoint1
-                                            ? const Icon(
-                                                Icons.emoji_events_sharp,
-                                                color: Color.fromARGB(
-                                                    255, 240, 218, 20),
-                                              )
-                                            : const Icon(
-                                                Icons
-                                                    .handshake_outlined, // Berabere durumu için handshake ikonu
-                                                size: 200,
-                                                color: Colors.blue,
-                                              ),
-                                    winnerTeam: teamPoint1 > teamPoint2
-                                        ? team1
-                                        : teamPoint1 < teamPoint2
-                                            ? team2
-                                            : "Berabere",
-                                  )
-                                : Column(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.pause,
-                                          size: 200,
-                                          color: Color.fromARGB(
-                                              255, 117, 117, 117),
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            isPaused = !isPaused;
-                                            if (isPaused) {
-                                              _timerController.pause();
-                                            } else {
-                                              _timerController.resume();
-                                            }
-                                          });
-                                        },
-                                      ),
-                                      Text(
-                                        isTeamTurn ? team1 : team2,
-                                        style: TextStyle(
-                                          fontSize: 50,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(
-                                              255, 117, 117, 117),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                          ],
-                        ),
-                      )
-                    : WordCards(listData: tabooWords[randomWords]),
-              ),
+
+              GameContents(
+                  isPaused: isPaused,
+                  isTeamTurn: isTeamTurn,
+                  isTimeOver: isTimeOver,
+                  paused: () {
+                    setState(() {
+                      isPaused = !isPaused;
+                      if (isPaused) {
+                        _timerController.pause();
+                      } else {
+                        _timerController.resume();
+                        randomWords = Random().nextInt(tabooWords.length);
+                      }
+                    });
+                  },
+                  randomWords: randomWords,
+                  tabooWords: tabooWords,
+                  team1: team1,
+                  team2: team2,
+                  teamPoint1: teamPoint1,
+                  teamPoint2: teamPoint2),
               // Bottom
               isPaused
                   ? EndBottom(screenHeight: screenHeight)
-                  : Container(
-                      height: screenHeight * 0.13,
-                      decoration: const BoxDecoration(
-                          color: Color.fromRGBO(126, 48, 225, 0.984),
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GameButtons(
-                            onPressed: () {
-                              setState(() {
-                                isPaused
-                                    ? null
-                                    : setState(
-                                        () {
-                                          if (isTeamTurn) {
-                                            teamPoint1 = teamPoint1 - point;
-                                          } else {
-                                            teamPoint2 = teamPoint2 - point;
-                                          }
+                  : BottomBar(
+                      screenHeight: screenHeight,
+                      wrongOnPress: () {
+                        setState(
+                          () {
+                            isPaused
+                                ? null
+                                : setState(
+                                    () {
+                                      if (isTeamTurn) {
+                                        teamPoint1 = teamPoint1 - point;
+                                      } else {
+                                        teamPoint2 = teamPoint2 - point;
+                                      }
+                                      randomWords =
+                                          Random().nextInt(tabooWords.length);
+                                    },
+                                  );
+                          },
+                        );
+                      },
+                      lifePiece: isTeamTurn
+                          ? teamLives1.toString()
+                          : teamLives2.toString(),
+                      liveOnPress: () {
+                        setState(
+                          () {
+                            isPaused
+                                ? null
+                                : setState(
+                                    () {
+                                      if (isTeamTurn) {
+                                        if (teamLives1 > 0) {
+                                          teamLives1--;
                                           randomWords = Random()
                                               .nextInt(tabooWords.length);
-                                        },
-                                      );
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
-                            ),
-                            backgroundColor: Colors.pink,
-                          ),
-                          GameButtons(
-                              onPressed: () {
-                                setState(() {
-                                  isPaused
-                                      ? null
-                                      : setState(
-                                          () {
-                                            if (isTeamTurn) {
-                                              if (teamLives1 > 0) {
-                                                teamLives1--;
-                                                randomWords = Random()
-                                                    .nextInt(tabooWords.length);
-                                              } else {}
-                                            } else {
-                                              if (teamLives2 > 0) {
-                                                teamLives2--;
-                                                randomWords = Random()
-                                                    .nextInt(tabooWords.length);
-                                              } else {}
-                                            }
-                                          },
-                                        );
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Text(
-                                    isTeamTurn
-                                        ? teamLives1.toString()
-                                        : teamLives2.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontSize: 17),
-                                  ),
-                                  Icon(
-                                    Icons.loop,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                              backgroundColor: Colors.blue),
-                          GameButtons(
-                            onPressed: () {
-                              isPaused
-                                  ? null
-                                  : setState(() {
-                                      if (isTeamTurn) {
-                                        teamPoint1 = teamPoint1 + point;
+                                        } else {}
                                       } else {
-                                        teamPoint2 = teamPoint2 + point;
+                                        if (teamLives2 > 0) {
+                                          teamLives2--;
+                                          randomWords = Random()
+                                              .nextInt(tabooWords.length);
+                                        } else {}
                                       }
-                                      randomWords = intRandom =
-                                          Random().nextInt(tabooWords.length);
-                                    });
-                            },
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            ),
-                            backgroundColor: Colors.green,
-                          ),
-                        ],
-                      ),
-                    ),
+                                    },
+                                  );
+                          },
+                        );
+                      },
+                      rightOnPress: () {
+                        isPaused
+                            ? null
+                            : setState(
+                                () {
+                                  if (isTeamTurn) {
+                                    teamPoint1 = teamPoint1 + point;
+                                  } else {
+                                    teamPoint2 = teamPoint2 + point;
+                                  }
+                                  randomWords =
+                                      Random().nextInt(tabooWords.length);
+                                },
+                              );
+                      },
+                    )
             ],
           ),
         );
