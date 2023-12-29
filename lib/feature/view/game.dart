@@ -7,6 +7,7 @@ import 'package:flutter_game/feature/view/game_end.dart';
 import 'package:flutter_game/feature/view/home.dart';
 import 'package:flutter_game/model/words/words_list.dart';
 import 'package:flutter_game/product/widgets/card/game_card.dart';
+import 'package:flutter_game/product/widgets/container/end_bottom.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
 import 'package:flutter_game/product/widgets/buttons/game_buttons.dart';
 import 'package:provider/provider.dart';
@@ -341,105 +342,107 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
                     : WordCards(listData: tabooWords[randomWords]),
               ),
               // Bottom
-              Container(
-                height: screenHeight * 0.13,
-                decoration: const BoxDecoration(
-                    color: Color.fromRGBO(126, 48, 225, 0.984),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(30),
-                        topLeft: Radius.circular(30))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GameButtons(
-                      onPressed: () {
-                        setState(() {
-                          isPaused
-                              ? null
-                              : setState(
-                                  () {
-                                    if (isTeamTurn) {
-                                      teamPoint1 = teamPoint1 - point;
-                                    } else {
-                                      teamPoint2 = teamPoint2 - point;
-                                    }
-                                    randomWords =
-                                        Random().nextInt(tabooWords.length);
-                                  },
-                                );
-                        });
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      ),
-                      backgroundColor: Colors.pink,
-                    ),
-                    GameButtons(
-                        onPressed: () {
-                          setState(() {
-                            isPaused
-                                ? null
-                                : setState(
-                                    () {
-                                      if (isTeamTurn) {
-                                        if (teamLives1 > 0) {
-                                          teamLives1--;
+              isPaused
+                  ? EndBottom(screenHeight: screenHeight)
+                  : Container(
+                      height: screenHeight * 0.13,
+                      decoration: const BoxDecoration(
+                          color: Color.fromRGBO(126, 48, 225, 0.984),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              topLeft: Radius.circular(30))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GameButtons(
+                            onPressed: () {
+                              setState(() {
+                                isPaused
+                                    ? null
+                                    : setState(
+                                        () {
+                                          if (isTeamTurn) {
+                                            teamPoint1 = teamPoint1 - point;
+                                          } else {
+                                            teamPoint2 = teamPoint2 - point;
+                                          }
                                           randomWords = Random()
                                               .nextInt(tabooWords.length);
-                                        } else {}
-                                      } else {
-                                        if (teamLives2 > 0) {
-                                          teamLives2--;
-                                          randomWords = Random()
-                                              .nextInt(tabooWords.length);
-                                        } else {}
-                                      }
-                                    },
-                                  );
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              isTeamTurn
-                                  ? teamLives1.toString()
-                                  : teamLives2.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 17),
-                            ),
-                            Icon(
-                              Icons.loop,
+                                        },
+                                      );
+                              });
+                            },
+                            child: Icon(
+                              Icons.close,
                               color: Colors.white,
                             ),
-                          ],
-                        ),
-                        backgroundColor: Colors.blue),
-                    GameButtons(
-                      onPressed: () {
-                        isPaused
-                            ? null
-                            : setState(() {
-                                if (isTeamTurn) {
-                                  teamPoint1 = teamPoint1 + point;
-                                } else {
-                                  teamPoint2 = teamPoint2 + point;
-                                }
-                                randomWords = intRandom =
-                                    Random().nextInt(tabooWords.length);
-                              });
-                      },
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
+                            backgroundColor: Colors.pink,
+                          ),
+                          GameButtons(
+                              onPressed: () {
+                                setState(() {
+                                  isPaused
+                                      ? null
+                                      : setState(
+                                          () {
+                                            if (isTeamTurn) {
+                                              if (teamLives1 > 0) {
+                                                teamLives1--;
+                                                randomWords = Random()
+                                                    .nextInt(tabooWords.length);
+                                              } else {}
+                                            } else {
+                                              if (teamLives2 > 0) {
+                                                teamLives2--;
+                                                randomWords = Random()
+                                                    .nextInt(tabooWords.length);
+                                              } else {}
+                                            }
+                                          },
+                                        );
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    isTeamTurn
+                                        ? teamLives1.toString()
+                                        : teamLives2.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 17),
+                                  ),
+                                  Icon(
+                                    Icons.loop,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: Colors.blue),
+                          GameButtons(
+                            onPressed: () {
+                              isPaused
+                                  ? null
+                                  : setState(() {
+                                      if (isTeamTurn) {
+                                        teamPoint1 = teamPoint1 + point;
+                                      } else {
+                                        teamPoint2 = teamPoint2 + point;
+                                      }
+                                      randomWords = intRandom =
+                                          Random().nextInt(tabooWords.length);
+                                    });
+                            },
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        ],
                       ),
-                      backgroundColor: Colors.green,
                     ),
-                  ],
-                ),
-              ),
             ],
           ),
         );
