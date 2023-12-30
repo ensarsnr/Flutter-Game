@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GameButtons extends StatelessWidget {
+  // ignore: use_key_in_widget_constructors
   const GameButtons({
     Key? key,
     required this.onPressed,
