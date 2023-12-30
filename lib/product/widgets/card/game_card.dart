@@ -16,14 +16,12 @@ class WordCards extends StatelessWidget {
           style: const TextStyle(
               color: Colors.purple, fontSize: 40, fontWeight: FontWeight.w900),
         ),
-        Divider(
+        const Divider(
           height: 2,
           endIndent: 70,
           indent: 70,
         ),
-        SizedBox(
-          height: 30,
-        ),
+        const SizedBox(height: 30),
         ListView.builder(
           shrinkWrap: true,
           itemCount: listData.words.length,
@@ -31,7 +29,7 @@ class WordCards extends StatelessWidget {
             return Text(
               listData.words[index],
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
