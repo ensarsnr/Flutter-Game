@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/constants/app_text.dart';
-import 'package:flutter_game/feature/view/game.dart';
 
 class GameAppBar extends StatelessWidget {
   const GameAppBar(
       {super.key,
-      required this.navPaused,
       required this.child,
       required this.screenHeight,
       required this.screenWidth,
@@ -15,7 +13,6 @@ class GameAppBar extends StatelessWidget {
       required this.teamPoint1,
       required this.teamPoint2});
 
-  final VoidCallback navPaused;
   final double screenHeight;
   final double screenWidth;
   final String team1;
@@ -35,54 +32,16 @@ class GameAppBar extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.exit_to_app),
+            padding: const EdgeInsets.all(20),
+            child: const Center(
+              child: Text(
+                TextConstants.appTitle,
+                style: TextStyle(
                   color: Colors.white,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext contex) {
-                        return AlertDialog(
-                          title: const Text(TextConstants.attention),
-                          actions: [
-                            const Text(TextConstants.info),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    ColorConstants.ALERT_BUTTON_COLOR,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              onPressed: () => goToHome(contex),
-                              child: const Text(
-                                TextConstants.continueText,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const Text(
-                  TextConstants.appTitle,
-                  style: TextStyle(color: Colors.white),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.pause),
-                  color: Colors.white,
-                  onPressed: navPaused,
-                ),
-              ],
+              ),
             ),
           ),
           Container(
