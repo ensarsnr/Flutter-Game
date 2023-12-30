@@ -44,6 +44,7 @@ class GameContents extends StatelessWidget {
                               : teamPoint2 > teamPoint1
                                   ? const Icon(
                                       Icons.emoji_events_sharp,
+                                      size: 200,
                                       color: Color.fromARGB(255, 240, 218, 20),
                                     )
                                   : const Icon(
