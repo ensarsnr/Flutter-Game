@@ -84,16 +84,6 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GameAppBar(
-                navPaused: () {
-                  setState(() {
-                    isPaused = !isPaused;
-                    if (isPaused) {
-                      _timerController.pause();
-                    } else {
-                      _timerController.resume();
-                    }
-                  });
-                },
                 screenHeight: screenHeight,
                 screenWidth: screenWidth,
                 team1: team1,
@@ -131,7 +121,7 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 
                       // Her roundda 1 sayı eksilecek.
                       round++;
-                      if (round >= 2) {
+                      if (round >= 6) {
                         isTimeOver = true;
                       }
                     });
