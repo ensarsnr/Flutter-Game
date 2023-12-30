@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SettingButton extends StatelessWidget {
   SettingButton(
       {super.key,
@@ -26,6 +27,5 @@ class SettingButton extends StatelessWidget {
         child: child,
       ),
     );
-    ;
   }
 }
