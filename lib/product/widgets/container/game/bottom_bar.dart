@@ -29,37 +29,38 @@ class BottomBar extends StatelessWidget {
         children: [
           GameButtons(
             onPressed: wrongOnPress,
-            child: Icon(
+            backgroundColor: Colors.pink,
+            child: const Icon(
               Icons.close,
               color: Colors.white,
             ),
-            backgroundColor: Colors.pink,
           ),
           GameButtons(
-              onPressed: liveOnPress,
-              child: Row(
-                children: [
-                  Text(
-                    lifePiece,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 17),
-                  ),
-                  Icon(
-                    Icons.loop,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.blue),
+            onPressed: liveOnPress,
+            backgroundColor: Colors.blue,
+            child: Row(
+              children: [
+                Text(
+                  lifePiece,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 17),
+                ),
+                const Icon(
+                  Icons.loop,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
           GameButtons(
             onPressed: rightOnPress,
-            child: Icon(
+            backgroundColor: Colors.green,
+            child: const Icon(
               Icons.check,
               color: Colors.white,
             ),
-            backgroundColor: Colors.green,
           ),
         ],
       ),
