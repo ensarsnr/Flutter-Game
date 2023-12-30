@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/product/widgets/buttons/settings_buttons.dart';
 import 'package:flutter_game/product/widgets/container/settings_container.dart';
 import 'package:flutter_game/provider/settings_provider.dart';
@@ -33,14 +34,17 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    // Provider
     SettingsProvider settingsProvider =
         Provider.of<SettingsProvider>(context, listen: false);
+
+    // width and height
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffbFFD1E3),
+      backgroundColor: ColorConstants.SETTINGS_BG,
       appBar: AppBar(
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -48,7 +52,7 @@ class _SettingsViewState extends State<SettingsView> {
           "Ayarlar",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color.fromARGB(185, 128, 45, 217),
+        backgroundColor: ColorConstants.SETTINGS_NAV,
       ),
       body: Column(
         children: [
@@ -104,7 +108,6 @@ class _SettingsViewState extends State<SettingsView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SettingButton(
-                          child: Icon(Icons.vibration),
                           color: vibOff,
                           onPressed: () {
                             Vibration.vibrate(duration: 100, amplitude: 1);
@@ -115,18 +118,20 @@ class _SettingsViewState extends State<SettingsView> {
                               isVib = !isVib;
                             });
                           },
+                          child: const Icon(Icons.vibration),
                         ),
                         SettingButton(
-                            child: Icon(Icons.music_off),
-                            onPressed: () {
-                              setState(() {
-                                musicOff = isMusic
-                                    ? const Color.fromARGB(255, 252, 162, 192)
-                                    : Colors.black.withOpacity(0);
-                                isMusic = !isMusic;
-                              });
-                            },
-                            color: musicOff)
+                          onPressed: () {
+                            setState(() {
+                              musicOff = isMusic
+                                  ? const Color.fromARGB(255, 252, 162, 192)
+                                  : Colors.black.withOpacity(0);
+                              isMusic = !isMusic;
+                            });
+                          },
+                          color: musicOff,
+                          child: const Icon(Icons.music_off),
+                        )
                       ],
                     ),
                   ),
@@ -144,11 +149,11 @@ class _SettingsViewState extends State<SettingsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SettingButton(
-                    child: Icon(Icons.add),
                     onPressed: () {
                       setState(() => point > 100 ? 100 : point = point + 5);
                     },
                     color: Colors.black.withOpacity(0),
+                    child: const Icon(Icons.add),
                   ),
                   Text(
                     '${point.toString()} puan',
@@ -156,11 +161,11 @@ class _SettingsViewState extends State<SettingsView> {
                         fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   SettingButton(
-                    child: Icon(Icons.remove),
                     onPressed: () {
                       setState(() => point < 5 ? 5 : point = point - 5);
                     },
                     color: Colors.black.withOpacity(0),
+                    child: const Icon(Icons.remove),
                   ),
                 ],
               ),
@@ -171,27 +176,28 @@ class _SettingsViewState extends State<SettingsView> {
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SettingButton(
-                    child: Icon(Icons.add),
                     onPressed: () {
                       setState(() => second > 600 ? 600 : second = second + 10);
                     },
                     color: Colors.black.withOpacity(0),
+                    child: const Icon(Icons.add),
                   ),
                   Text(
                     '${second.toString()} saniye',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   SettingButton(
-                    child: Icon(Icons.remove),
                     onPressed: () {
                       setState(() => second <= 10 ? 10 : second = second - 10);
                     },
                     color: Colors.black.withOpacity(0),
+                    child: const Icon(Icons.remove),
                   ),
                 ],
               ),
@@ -202,17 +208,10 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           const SizedBox(height: 30),
           ElevatedButton(
-            child: Text(
-              'Kaydet',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 20),
-            ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.only(
                   left: 100, right: 100, top: 15, bottom: 15),
-              primary: Colors.blue,
+              backgroundColor: Colors.blue,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
             ),
@@ -222,6 +221,13 @@ class _SettingsViewState extends State<SettingsView> {
               settingsProvider.setSecond(second);
               Navigator.pop(context);
             },
+            child: const Text(
+              'Kaydet',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20),
+            ),
           ),
         ],
       ),
