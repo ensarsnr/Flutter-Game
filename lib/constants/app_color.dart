@@ -1,3 +1,5 @@
+// ignore_for_file: use_full_hex_values_for_flutter_colors, constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 class ColorConstants {
@@ -12,4 +14,9 @@ class ColorConstants {
   static const PITCH_VIOLET = Color(0xffb49108B);
   static const ALERT_BUTTON_COLOR = Color.fromARGB(255, 253, 130, 122);
   static const NAV_BACKGROUND = Color.fromARGB(248, 161, 89, 255);
+  static const SETTINGS_BG = Color(0xffbFFD1E3);
+  static const SETTINGS_NAV = Color.fromARGB(185, 128, 45, 217);
+  static const PLAY_BUTTON = Color(0xffbEF4040);
+  static const SETTINGS_BUTTON = Color(0xffb52D3D8);
+  static const EXIT_BUTTON = Color(0xffbFF9800);
 }
