@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_game/constants/app_color.dart';
 import 'package:flutter_game/constants/app_text.dart';
 import 'package:flutter_game/feature/view/game.dart';
@@ -37,7 +36,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     height: screenHeight * 0.08,
                     width: screenWidth * 0.5,
-                    backgroundColor: const Color(0xffbEF4040),
+                    backgroundColor: ColorConstants.PLAY_BUTTON,
                     child: const Text(
                       TextConstants.playButton,
                       style: TextStyle(
@@ -53,7 +52,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     height: screenHeight * 0.08,
                     width: screenWidth * 0.5,
-                    backgroundColor: const Color(0xffb52D3D8),
+                    backgroundColor: ColorConstants.SETTINGS_BUTTON,
                     child: const Text(
                       TextConstants.settingsButton,
                       style: TextStyle(
@@ -69,7 +68,7 @@ class HomeView extends StatelessWidget {
                   ContainerElevatedButton(
                     width: screenWidth * 0.5,
                     height: screenHeight * 0.08,
-                    backgroundColor: const Color(0xffbFF9800),
+                    backgroundColor: ColorConstants.EXIT_BUTTON,
                     child: const Text(
                       TextConstants.exitButton,
                       style: TextStyle(
