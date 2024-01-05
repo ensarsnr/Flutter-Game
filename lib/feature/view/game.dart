@@ -121,6 +121,8 @@ class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 
                       // Her roundda 1 sayı eksilecek.
                       round++;
+                      teamLives2 = 3;
+                      teamLives1 = 3;
                       if (round >= 6) {
                         isTimeOver = true;
                       }
