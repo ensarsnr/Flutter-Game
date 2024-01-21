@@ -15,9 +15,5 @@ Projede aşağıdaki kütüphaneleri kullanarak geliştirdim:
 Aşağıda DABUU uygulamasının ekran görüntülerini bulabilirsiniz:
 
 <div align="center">
-  <img src="/screenshots/home.jpeg" width="250" alt="Ana Ekran" />
-  <img src="/screenshots/settings.jpeg" width="250" alt="Ayarlar Ekran"/>
-  <img src="/screenshots/game.jpeg" width="250" alt="Oyun Ekranı"/>
-  <img src="/screenshots/paused.jpeg" width="250" alt="Oyun Ekranı"/>
-  <img src="/screenshots/end.jpeg" width="250" alt="Oyun Ekranı"/>
+  <img src="/screenshots/Adsız tasarım.png"  alt="Ana Ekran" />
 </div>
